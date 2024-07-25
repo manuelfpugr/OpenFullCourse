@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant browser
+    participant server
+    participant user
+    participant database
+
+    user ->> browser: Type note in text field
+    user ->> browser: Click save button
+    
+    browser ->> server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate server
+    
+    server ->> database: Save the new note
+    activate database
+
+    database ->> server: Confirmation of note saved into the database
+    deactivate database
+
+    server ->> brower: Update list of notes
+    deactivate server
+    
+    browser ->> user: Render the updated list of notes
+
+
+   

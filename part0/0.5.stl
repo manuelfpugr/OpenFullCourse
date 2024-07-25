@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant user
+    participant browser
+    participant server
+
+    user->>browser: Navigate to https://studies.cs.helsinki.fi/exampleapp/spa
+    browser->>server: HTTP GET request to /spa
+    activate server
+
+    server-->>browser: HTML file for SPA
+    deactivate server
+
+    browser->>server: HTTP GET request for JavaScript and CSS files
+    activate server
+
+    server-->>browser: JavaScript and CSS files
+    deactivate server
+
+    browser->>server: HTTP GET request for existing notes data (e.g., /data.json)
+    activate server
+
+    server-->>browser: JSON data with existing notes
+    deactivate server
+    
+    browser-->>user: Render the SPA with existing notes

@@ -1,0 +1,28 @@
+sequenceDiagram
+    participant User
+    participant SPA "Single Page Application"
+    participant NoteService
+    participant Database
+
+    User ->> SPA: Open application
+    SPA ->> NoteService: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate NoteService
+    NoteService ->> Database: Fetch existing notes
+    activate Database
+    Database -->> NoteService: Return existing notes
+    deactivate Database
+    NoteService -->> SPA: Return existing notes
+    deactivate NoteService
+    SPA -->> User: Render existing notes
+
+    User ->> SPA: Enter note content
+    User ->> SPA: Click save button
+    SPA ->> NoteService: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    activate NoteService
+    NoteService ->> Database: Save the new note
+    activate Database
+    Database -->> NoteService: Confirmation of note saved
+    deactivate Database
+    NoteService -->> SPA: Return success response
+    deactivate NoteService
+    SPA -->> User: Display success message 
