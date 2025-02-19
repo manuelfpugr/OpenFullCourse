@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import communication from './communication'
 import Filter from './Filter'
 import PersonForm from './PersonForm'
@@ -11,12 +12,28 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState({ message: null, type: null })
+  const [info, setInfo] = useState('')
 
   useEffect(() => {
-    communication
-      .getList()
-      .then(response => setPersons(response.data))
-      .catch(error => console.error('Error fetching data:', error))
+    axios
+      .get('http://localhost:3001/api/persons')
+      .then(response => {
+        setPersons(response.data.persons)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error)
+      })
+  }, [])
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/api/info')
+      .then(response => {
+        setInfo(response.data)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error)
+      })
   }, [])
 
   const handleInputChange = (event) => setNewName(event.target.value)
@@ -107,6 +124,8 @@ const App = () => {
 
   return (
     <div>
+      <h2>Info</h2>
+      <div>{info}</div>
       <h2>Phonebook</h2>
       <Notification message={notification.message} type={notification.type} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />

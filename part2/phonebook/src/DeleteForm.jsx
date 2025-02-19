@@ -3,6 +3,7 @@ import communication from './communication';
 
 const DeleteButton = ({ id, name, onDelete }) => {
     const handleDelete = () => {
+        id = parseInt(id);
         if (window.confirm(`Delete ${name}?`)) {
             communication
                 .deletePerson(id)
