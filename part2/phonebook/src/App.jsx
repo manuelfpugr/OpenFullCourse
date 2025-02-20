@@ -13,6 +13,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState({ message: null, type: null })
   const [info, setInfo] = useState('')
+  const [infoId, setInfoId] = useState([])
 
   useEffect(() => {
     axios
@@ -36,6 +37,17 @@ const App = () => {
       })
   }, [])
 
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/api/info/2')
+      .then(response => {
+        setInfoId(response.data.persons)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error)
+      })
+  }, [])
+
   const handleInputChange = (event) => setNewName(event.target.value)
 
   const handleNumberChange = (event) => setNewNumber(event.target.value)
@@ -45,14 +57,13 @@ const App = () => {
     setFilter(value)
     if (value === '') setPersons([])
   }
-
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this person?')) {
       communication
         .remove(id)
-        .then(() => {
+        .then(response => {
           setPersons(persons.filter(person => person.id !== id))
-          setNotification({ message: 'Person deleted successfully', type: 'success' })
+          setNotification({ message: 'Person deleted', type: 'success' })
           setTimeout(() => setNotification({ message: null, type: null }), 5000)
         })
         .catch(error => {
@@ -63,6 +74,7 @@ const App = () => {
     }
   }
 
+
   const handleSubmit = (event) => {
     event.preventDefault()
     if(newName === '' || newNumber === '') {
@@ -71,6 +83,7 @@ const App = () => {
     }
     const existingPerson = persons.find(person => person.name === newName && person.number === newNumber)
     if (existingPerson) {
+      console.log("existingPerson", existingPerson) 
       alert(`${newName} with number ${newNumber} is already added to phonebook`)
       return
     }
