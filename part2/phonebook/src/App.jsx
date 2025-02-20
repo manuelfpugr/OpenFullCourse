@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import communication from './communication'
 import Filter from './Filter'
 import PersonForm from './PersonForm'
@@ -11,12 +12,40 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState({ message: null, type: null })
+  const [info, setInfo] = useState('')
+  const [infoId, setInfoId] = useState([])
 
   useEffect(() => {
-    communication
-      .getList()
-      .then(response => setPersons(response.data))
-      .catch(error => console.error('Error fetching data:', error))
+    axios
+      .get('http://localhost:3001/api/persons')
+      .then(response => {
+        setPersons(response.data.persons)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error)
+      })
+  }, [])
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/api/info')
+      .then(response => {
+        setInfo(response.data)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error)
+      })
+  }, [])
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/api/info/2')
+      .then(response => {
+        setInfoId(response.data.persons)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error)
+      })
   }, [])
 
   const handleInputChange = (event) => setNewName(event.target.value)
@@ -28,14 +57,13 @@ const App = () => {
     setFilter(value)
     if (value === '') setPersons([])
   }
-
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this person?')) {
       communication
         .remove(id)
-        .then(() => {
+        .then(response => {
           setPersons(persons.filter(person => person.id !== id))
-          setNotification({ message: 'Person deleted successfully', type: 'success' })
+          setNotification({ message: 'Person deleted', type: 'success' })
           setTimeout(() => setNotification({ message: null, type: null }), 5000)
         })
         .catch(error => {
@@ -46,6 +74,7 @@ const App = () => {
     }
   }
 
+
   const handleSubmit = (event) => {
     event.preventDefault()
     if(newName === '' || newNumber === '') {
@@ -54,6 +83,7 @@ const App = () => {
     }
     const existingPerson = persons.find(person => person.name === newName && person.number === newNumber)
     if (existingPerson) {
+      console.log("existingPerson", existingPerson) 
       alert(`${newName} with number ${newNumber} is already added to phonebook`)
       return
     }
@@ -107,6 +137,8 @@ const App = () => {
 
   return (
     <div>
+      <h2>Info</h2>
+      <div>{info}</div>
       <h2>Phonebook</h2>
       <Notification message={notification.message} type={notification.type} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
