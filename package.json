@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "scripts": {
+    "start": "node /openfullcoursep2/index.js",
+    "dev": "nodemon /openfullcoursep2/index.js"
+  }
+}

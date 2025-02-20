@@ -1,13 +1,14 @@
 import axios from 'axios'
 
-const baseUrl = 'api/persons'
+const baseUrl = '/api/persons'
 
 const getList = () => {
   return axios.get(baseUrl)
 }
 
 const create = (newPerson) => {
-  return axios.post(baseUrl, newPerson)
+  console.log('Creating', newPerson)
+  return axios.post(`baseUrl`, newPerson)
 }
 
 const update = (id, updatedPerson) => {
@@ -15,6 +16,7 @@ const update = (id, updatedPerson) => {
 }
 
 const remove = (id) => {
+  console.log('Removing', id)
   return axios.delete(`${baseUrl}/${id}`)
 }
 
